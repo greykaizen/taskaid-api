@@ -154,11 +154,14 @@ ${fileList}
 Submitted at: ${payload.createdAt}
 `;
 
-      await transporter.sendMail({
+      // Send email without blocking the response
+      transporter.sendMail({
         from,
         to,
         subject: `New TaskAid Task: ${payload.title} (${payload.suburb})`,
         text,
+      }).catch(err => {
+        console.error('Email sending failed:', err.message);
       });
     }
 

@@ -16,6 +16,9 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
+// Trust proxy for Render deployment (behind reverse proxy)
+app.set('trust proxy', 1);
+
 const PORT = process.env.PORT || 8080;
 const SITE_ORIGIN = process.env.SITE_ORIGIN || `http://localhost:${PORT}`;
 
@@ -109,7 +112,7 @@ app.post("/api/tasks", upload.array("photos", 6), async (req, res) => {
         "",
     };
 
-    const required = ["category","title","description","suburb","postcode","name","mobile","email","contactPref","timing"];
+    const required = ["category", "title", "description", "suburb", "postcode", "name", "mobile", "email", "contactPref", "timing"];
     for (const k of required) {
       if (!String(payload[k] || "").trim()) {
         return res.status(400).json({ ok: false, error: `Missing ${k}` });
@@ -128,7 +131,7 @@ app.post("/api/tasks", upload.array("photos", 6), async (req, res) => {
         : "None";
 
       const text =
-`New TaskAid task received (${payload.id})
+        `New TaskAid task received (${payload.id})
 
 Category: ${payload.category}
 Title: ${payload.title}
